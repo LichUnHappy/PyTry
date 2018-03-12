@@ -12,11 +12,14 @@ pca = PCA(n_components=2)
 selection = SelectKBest(k=1)
 combined_features = FeatureUnion([("pca", pca),
                                 ("univ_select", selection)])
+# print(combined_features)
 
 svm = SVC(kernel="linear")
 
-pipeline = Pipeline([("features", "combined_features"), ("svm", svm)])
+pipeline = Pipeline([("features", combined_features), ("svm", svm)])
 pipeline.fit(x,y)
 
-pipeline,predict(x)
+pipeline.predict(x)
 joblib.dump(pipeline, 'iris-pipeline.pkl')
+
+print("Clear!")
