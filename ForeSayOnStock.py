@@ -32,8 +32,6 @@ data_test  = data[n_train:]
 y_train = y[10:n_train]
 y_test  = y[(n_train+10):]
 
-""" 利用Pipeline实现建模
-""" 
 
 pipeline = Pipeline([("ColumnEx", ColumnExtractor("Close")),
                      ("Diff", TimeSeriesDiff()),
@@ -44,8 +42,6 @@ pipeline = Pipeline([("ColumnEx", ColumnExtractor("Close")),
 pipeline.fit(data_train, y_train)
 y_pred = pipeline.predict(data_test)
 
-""" 查看并评价结果
-""" 
 
 print(r2_score(y_test, y_pred))
 print(median_absolute_error(y_test, y_pred))
@@ -84,8 +80,5 @@ cumulative_return_2 = (cc_2+1).cumprod()
 cumulative_return_2.plot(style="k--", rot=10)
 print(time.clock() - start_time, "seconds")
 plt.show()
-
-""" 预测运行时间有多长?
-""" 
 
 print("Clear!")
