@@ -6,40 +6,40 @@ print("This dataset has {0} samples and {1} features".format(n_samples, n_featur
 
 print(X[:5])
 
-# The names of the features, for your reference.
+# 货物名称
 features = ["bread", "milk", "cheese", "apples", "bananas"]
 
-# First, how many rows contain our premise: that a person is buying apples
+# 第一，有多少人买了苹果，这是前提。
 num_apple_purchases = 0
 for sample in X:
     if sample[3] == 1:  # This person bought Apples
         num_apple_purchases += 1
 print("{0} people bought Apples".format(num_apple_purchases))
 
-# How many of the cases that a person bought Apples involved the people purchasing Bananas too?
-# Record both cases where the rule is valid and is invalid.
+# 多少买了苹果的人还买了香蕉？
+# 记录有效与失效案例
 rule_valid = 0
 rule_invalid = 0
 for sample in X:
-    if sample[3] == 1:  # This person bought Apples
+    if sample[3] == 1:  # 买了苹果
         if sample[4] == 1:
-            # This person bought both Apples and Bananas
+            # 买了苹果还买了香蕉
             rule_valid += 1
         else:
-            # This person bought Apples, but not Bananas
+            # 只买了苹果
             rule_invalid += 1
 print("{0} cases of the rule being valid were discovered".format(rule_valid))
 print("{0} cases of the rule being invalid were discovered".format(rule_invalid))
 
-# Now we have all the information needed to compute Support and Confidence
-support = rule_valid  # The Support is the number of times the rule is discovered.
+# 计算支持度与置信度
+support = rule_valid  # 支持度是规则生效的次数
 confidence = rule_valid / num_apple_purchases
 print("The support is {0} and the confidence is {1:.3f}.".format(support, confidence))
-# Confidence can be thought of as a percentage using the following:
+# 置信度的一种表示方式
 print("As a percentage, that is {0:.1f}%.".format(100 * confidence))
 
 from collections import defaultdict
-# Now compute for all possible rules
+# 计算所有可能的规则
 valid_rules = defaultdict(int)
 invalid_rules = defaultdict(int)
 num_occurences = defaultdict(int)
@@ -47,16 +47,16 @@ num_occurences = defaultdict(int)
 for sample in X:
     for premise in range(n_features):
         if sample[premise] == 0: continue
-        # Record that the premise was bought in another transaction
+        # 记录在其他交易中出现的前提物品
         num_occurences[premise] += 1
         for conclusion in range(n_features):
             if premise == conclusion:  # It makes little sense to measure if X -> X.
                 continue
             if sample[conclusion] == 1:
-                # This person also bought the conclusion item
+                # 买了后置物品
                 valid_rules[(premise, conclusion)] += 1
             else:
-                # This person bought the premise, but not the conclusion
+                # 买了前提，没买后置
                 invalid_rules[(premise, conclusion)] += 1
 support = valid_rules
 confidence = defaultdict(float)
@@ -83,7 +83,7 @@ premise = 1
 conclusion = 3
 print_rule(premise, conclusion, support, confidence, features)
 
-# Sort by support
+# 按支持度排序
 from pprint import pprint
 pprint(list(support.items()))
 
